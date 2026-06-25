@@ -1,0 +1,242 @@
+import type {
+  FooterColumn,
+  HeroContent,
+  NavItem,
+  NavLink,
+  NavMenuSection,
+  SiteMeta
+} from "@/types";
+
+import { SERVICES } from "./services";
+
+export const SITE = {
+  title: "Webshop Op Maat Laten Maken | Professionele Webshops - Sarte Global",
+  description:
+    "Webshop op maat laten maken bij Sarte Global: een professionele, moderne en responsive webshop voor ondernemers en bedrijven in Nederland. Sterke SEO, snelle oplevering en focus op conversie.",
+  themeColor: "#0D0D0D",
+  brandName: "SARTE GLOBAL",
+  brandAccent: ".",
+  url: "https://webshop-opmaat.nl",
+  name: "Sarte Global",
+  email: "info@sarteglobal.com",
+  // Online-only / nationaal: geen telefoonnummer getoond. Contact loopt via
+  // e-mail en WhatsApp. Vul hier pas een nummer in als er een geldig
+  // Nederlands telefoonnummer is — leeg laten betekent: geen telefoon in UI/schema.
+  phone: "",
+} as const satisfies SiteMeta;
+
+export const TRUST_LINE =
+  "Webshop laten maken is een dienst van Sarte Global." as const;
+
+/**
+ * The 10 service pages — single source for the "Services" nav dropdown, the
+ * mobile drawer group and the footer "Diensten" column. Keyword-rich labels +
+ * canonical routes (all pages exist), so every Diensten link is SEO-relevant.
+ */
+export const SERVICE_LINKS: readonly NavLink[] = [
+  { label: "Website laten maken", href: "/website-laten-maken" },
+  { label: "WordPress website laten maken", href: "/wordpress-website-laten-maken" },
+  { label: "Next.js website laten maken", href: "/nextjs-website-laten-maken" },
+  { label: "Webshop op maat", href: "/webshop-op-maat" },
+  { label: "WooCommerce webshop op maat", href: "/woocommerce-webshop-op-maat" },
+  { label: "Shopify webshop op maat", href: "/shopify-webshop-op-maat" },
+  { label: "Landing page laten maken", href: "/landing-page-laten-maken" },
+  { label: "E-commerce oplossingen", href: "/ecommerce-oplossingen" },
+  { label: "SEO optimalisatie", href: "/seo-optimalisatie" },
+  { label: "Website onderhoud", href: "/website-onderhoud" },
+];
+
+/**
+ * Service offerings that already have a dedicated keyword landing page. Their
+ * /services/[slug] twin would target the exact same primary keyword, so it is
+ * 301-redirected (next.config.mjs) and canonicalised to the landing page — one
+ * indexable URL per keyword, no cannibalisation. Single source of truth for the
+ * redirect targets, the sitemap exclusion, the canonical override on the dynamic
+ * service route and the nav de-duplication below.
+ */
+export const SERVICE_LANDING_PAGE_BY_SLUG = {
+  "web-development": "/website-laten-maken",
+  "ecommerce": "/webshop-op-maat",
+  "landing-page-optimization": "/landing-page-laten-maken",
+  "seo": "/seo-optimalisatie",
+} as const;
+
+/**
+ * Slugs from SERVICE_LANDING_PAGE_BY_SLUG as a Set. Used to exclude the four
+ * keyword-page duplicates from the mega-menu's "Onze diensten" column (so the
+ * two columns never list the same service twice) and from the sitemap.
+ */
+export const SERVICE_SLUGS_WITH_LANDING_PAGE: ReadonlySet<string> = new Set(
+  Object.keys(SERVICE_LANDING_PAGE_BY_SLUG),
+);
+
+export const SERVICES_NAV: readonly NavLink[] = SERVICES.filter(
+  (service) => !SERVICE_SLUGS_WITH_LANDING_PAGE.has(service.slug),
+).map((service) => ({
+  label: service.name,
+  href: service.href,
+}));
+
+/**
+ * The two titled columns inside the single "Diensten" mega-menu: the keyword
+ * landing pages (SERVICE_LINKS) and the broader service catalogue (SERVICES_NAV).
+ */
+export const NAV_SERVICE_SECTIONS: readonly NavMenuSection[] = [
+  { title: "Websites & webshops", items: SERVICE_LINKS },
+  { title: "Onze diensten", items: SERVICES_NAV },
+];
+
+/**
+ * Primary nav (explicit, user-defined order). One "Diensten" dropdown that
+ * opens a wide mega-menu combining both service lists (see NAV_SERVICE_SECTIONS).
+ */
+export const NAV_ITEMS: readonly NavItem[] = [
+  { kind: "link", label: "Webshop Op Maat", href: "/", shortLabel: "Webshop Op Maat" },
+  { kind: "link", label: "Prijzen", href: "#pakketten" },
+  { kind: "dropdown", label: "Diensten", menuId: "nav-diensten-menu", sections: NAV_SERVICE_SECTIONS },
+  { kind: "link", label: "Website laten maken", href: "/website-laten-maken", shortLabel: "Website laten maken" },
+  { kind: "link", label: "WooCommerce op maat", href: "/woocommerce-webshop-op-maat", shortLabel: "WooCommerce op maat" },
+  { kind: "link", label: "Shopify op maat", href: "/shopify-webshop-op-maat", shortLabel: "Shopify op maat" },
+  { kind: "link", label: "Contact", href: "/contact" },
+];
+
+export const NAV_CTA = {
+  label: "Offerte aanvragen",
+  href: "#cta",
+} as const;
+
+export const HERO = {
+  eyebrow: "Sarte Global",
+  title: [
+    {
+      words: [
+        { text: "Professionele Webshop Op Maat", italicAccent: true },
+      ],
+    },
+  ],
+  subtitle:
+    "Professionele, moderne en responsive webshops op maat voor bedrijven en ondernemers in Nederland. Sterke SEO, snelle oplevering en focus op conversie.",
+  primaryCta: { label: "Webshop op maat", href: "/webshop-op-maat" },
+  secondaryCta: { label: "Bekijk cases", href: "/cases" },
+  pricingCta: { label: "Bekijk pakketten", href: "#pakketten" },
+  stats: [
+    { label: "Modern & responsive design" },
+    { label: "Binnen 2 weken online" },
+    { label: "Voor MKB & ondernemers" },
+  ],
+  scrollLabel: "Scroll",
+  badgeText:
+    "WEBSHOP OP MAAT · SARTE GLOBAL · WEBSHOP OP MAAT · SARTE GLOBAL · ",
+} as const satisfies HeroContent;
+
+export const TRUSTED_LABEL = "Vertrouwd door Nederlandse ondernemers" as const;
+
+export const TRUSTED_BRANDS = [
+  "Meridian",
+  "Volta",
+  "Claros",
+  "Orbis",
+  "Fenix",
+  "Stratum",
+  "Kova",
+  "Helion",
+] as const satisfies readonly string[];
+
+export const CTA_SECTION = {
+  titleLead: "Laat jouw website",
+  titleEm: "vandaag starten.",
+  sub: "Plan een gratis kennismaking van 30 minuten — geen verplichtingen, gewoon een open gesprek over jouw website en doelen.",
+  ctaLabel: "Neem contact op",
+  ctaHref: "mailto:info@sarteglobal.com",
+} as const;
+
+export const FOOTER_MISSION =
+  "Professionele, moderne webshops op maat voor ondernemers en bedrijven in Nederland. Een dienst van Sarte Global — gebouwd voor groei en gemaakt om te verkopen." as const;
+
+export const FOOTER_COLUMNS = [
+  {
+    title: "Diensten",
+    links: SERVICE_LINKS,
+  },
+  {
+    title: "Bedrijf",
+    links: [
+      { label: "Over ons", href: "/over-ons" },
+      { label: "Cases", href: "/cases" },
+      { label: "Journal", href: "/journal" },
+      { label: "Vacatures", href: "/careers" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+] as const satisfies readonly FooterColumn[];
+
+export const NEWSLETTER = {
+  title: "De Nieuwsbrief",
+  description:
+    "Eén beknopte e-mail per maand. Praktische tips over webshops, SEO en online groei voor ondernemers.",
+  placeholder: "jij@bedrijf.nl",
+  buttonLabel: "Inschrijven",
+  defaultNote: "Geen spam. Op elk moment uitschrijven.",
+  errorNote: "Voer een geldig e-mailadres in.",
+  successNote: "Bedankt! Je ontvangt binnenkort onze eerste e-mail.",
+} as const;
+
+export const FOOTER_LEGAL = {
+  copyright: `© ${new Date().getFullYear()} Sarte Global`,
+  links: [
+    { label: "Privacy", href: "/privacy" },
+    { label: "Voorwaarden", href: "/terms" },
+    { label: "Cookies", href: "/cookies" },
+  ],
+} as const;
+
+export const PAYMENT_METHODS_LABEL = "Wij accepteren" as const;
+
+export const PAYMENT_METHODS = [
+  { id: "ideal", label: "iDEAL", color: "#CC0066" },
+  { id: "visa", label: "Visa", color: "#1A1F71" },
+  { id: "mastercard", label: "Mastercard", color: "#EB001B" },
+  { id: "paypal", label: "PayPal", color: "#00457C" },
+  { id: "stripe", label: "Stripe", color: "#635BFF" },
+] as const;
+
+export type PaymentMethodId = (typeof PAYMENT_METHODS)[number]["id"];
+
+export const COOKIE_COPY = {
+  message:
+    "We gebruiken een klein aantal cookies om verkeer te begrijpen en deze website te verbeteren.",
+  policyLabel: "Lees onze cookieverklaring",
+  policyHref: "/cookies",
+  declineLabel: "Weigeren",
+  acceptLabel: "Accepteren",
+  storageKey: "sarte_cookies",
+  delayMs: 1200,
+} as const;
+
+export * from "./about";
+export * from "./new-website";
+export * from "./landing-nieuwe-website";
+export * from "./wordpress";
+export * from "./webshop";
+export * from "./woocommerce";
+export * from "./shopify";
+export * from "./landing-page";
+export * from "./webapp";
+export * from "./seo-optimalisatie";
+export * from "./website-onderhoud";
+export * from "./nextjs";
+export * from "./pricing";
+export * from "./journal";
+export * from "./services";
+export * from "./team";
+export * from "./testimonials";
+export * from "./work";
+export * from "./process";
+export * from "./impact";
+export * from "./technologies";
+export * from "./hero-projects";
+export * from "./hero-stage";
+export * from "./local-businesses";
+export * from "./webshop-benefits";
+export * from "./webshop-platforms";
+export * from "./webshop-growth";
